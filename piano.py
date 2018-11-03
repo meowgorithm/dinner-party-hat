@@ -22,15 +22,14 @@ songs = {
     5: 'trans_europe_express.ogg',
     7: 'wanderflower.ogg',
     9: 'from_here_to_eternity_and_back.ogg',
-    11: 'a_coin_for_the_well.ogg',
+    11: 'teal.ogg',
     12: 'tower_of_heaven.ogg',
 }
 
 
 def leds_off():
     for i in range(16):
-        if i is not 16:
-            pianohat.set_led(i, False)
+        pianohat.set_led(i, False)
 
 
 def pause_music(i, pressed):
