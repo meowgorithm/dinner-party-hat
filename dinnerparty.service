@@ -1,0 +1,14 @@
+[Unit]
+Description=DinnerParty Piano Player
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u piano.py
+WorkingDirectory=/home/pi/dinnerparty
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
