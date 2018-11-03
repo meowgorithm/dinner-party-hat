@@ -75,10 +75,10 @@ def set_volume(v):
 def play_song(i, pressed):
     global playing, current_index, paused
 
-    paused = False
-
     if not pressed:
         return
+
+    paused = False
 
     if current_index is i and playing:
         pygame.mixer.music.stop()
