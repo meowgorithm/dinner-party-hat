@@ -34,8 +34,9 @@ def leds_off():
 
 
 def pause_music(i, pressed):
+    global paused
+
     if playing and pressed:
-        global paused
         if paused:
             print("Unpausing music.")
             pygame.mixer.music.unpause()
@@ -47,9 +48,10 @@ def pause_music(i, pressed):
 
 
 def volume_up(i, pressed):
+    global volume
+
     pianohat.set_led(i, pressed)
     if pressed:
-        global volume
         volume += 0.1
         if volume > 1:
             volume = 1
@@ -58,9 +60,10 @@ def volume_up(i, pressed):
 
 
 def volume_down(i, pressed):
+    global volume
+
     pianohat.set_led(i, pressed)
     if pressed:
-        global volume
         volume -= 0.1
         if volume < 0:
             volume = 0
