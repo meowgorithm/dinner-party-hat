@@ -13,8 +13,8 @@ with contextlib.redirect_stdout(None):
 
 playing = False
 paused = False
-current_index = -1
 volume = 0.5
+current_index = -1
 songs = {
     0: 'chromeo_tiny_desk_concert.ogg',
     2: 'plantasia.ogg',
@@ -22,6 +22,7 @@ songs = {
     5: 'trans_europe_express.ogg',
     7: 'wanderflower.ogg',
     9: 'from_here_to_eternity_and_back.ogg',
+    10: 'a_coin_for_the_well.ogg',
     11: 'teal.ogg',
     12: 'tower_of_heaven.ogg',
 }
