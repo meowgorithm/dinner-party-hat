@@ -34,7 +34,7 @@ def leds_off():
 
 
 def pause_music(i, pressed):
-    if pressed:
+    if playing and pressed:
         global paused
         if paused:
             print("Unpausing music.")
