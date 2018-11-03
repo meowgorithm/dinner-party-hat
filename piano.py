@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import signal
 import time
 import contextlib
 import pianohat
@@ -117,15 +118,23 @@ pianohat.on_octave_up(volume_up)
 pianohat.on_instrument(pause_music)
 pianohat.on_note(play_song)
 
+def shutdown():
+    leds_off()
+    sys.exit(0)
+
+def handle_sigterm(signal, frame):
+    shutdown()
 
 def main_loop():
     while 1:
         time.sleep(0.1)
+
+# Listen for signal
+signal.signal(signal.SIGTERM, shutdown)
 
 if __name__ == '__main__':
     try:
         main_loop()
     except KeyboardInterrupt:
         print('\nCaught interrupt. Exiting.\n')
-        leds_off()
-        sys.exit(0)
+        shutdown()
