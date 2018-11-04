@@ -11,7 +11,6 @@ import pianohat
 with contextlib.redirect_stdout(None):
     import pygame
 
-
 playing = False
 paused = False
 volume = 0.5
@@ -84,7 +83,7 @@ def play_song(i, pressed):
 
     paused = False
 
-    if current_index is i and playing:
+    if playing and current_index is i:
         pygame.mixer.music.stop()
         playing = False
         leds_off()
@@ -118,16 +117,20 @@ pianohat.on_octave_up(volume_up)
 pianohat.on_instrument(pause_music)
 pianohat.on_note(play_song)
 
+
 def shutdown():
     leds_off()
     sys.exit(0)
 
+
 def handle_sigterm(signal, frame):
     shutdown()
+
 
 def main_loop():
     while 1:
         time.sleep(0.1)
+
 
 # Listen for signal
 signal.signal(signal.SIGTERM, shutdown)
