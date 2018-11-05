@@ -133,7 +133,7 @@ def main_loop():
 
 
 # Listen for signal
-signal.signal(signal.SIGTERM, shutdown)
+signal.signal(signal.SIGTERM, handle_sigterm)
 
 if __name__ == '__main__':
     try:
