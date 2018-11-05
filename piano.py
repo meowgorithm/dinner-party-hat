@@ -53,8 +53,7 @@ def volume_up(i, pressed):
     pianohat.set_led(i, pressed)
     if pressed:
         volume += 0.1
-        if volume > 1:
-            volume = 1
+        volume = 1 if volume > 1 else volume
         print('Volume: %.2f' % volume)
         set_volume(volume)
 
@@ -65,8 +64,7 @@ def volume_down(i, pressed):
     pianohat.set_led(i, pressed)
     if pressed:
         volume -= 0.1
-        if volume < 0:
-            volume = 0
+        volume = 0 if volume < 0 else volume
         print('Volume: %.2f' % volume)
         set_volume(volume)
 
