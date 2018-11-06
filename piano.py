@@ -89,6 +89,7 @@ def play_song(i, pressed):
     paused = False
 
     if playing and current_index is i:
+        # This track is already playing, so let's stop it
         pygame.mixer.music.stop()
         playing = False
         leds_off()
@@ -101,6 +102,7 @@ def play_song(i, pressed):
         print('No song in slot', i)
         return
 
+    # Play the song assigned to this key
     leds_off()
     pygame.mixer.music.load(song)
     pygame.mixer.music.play()
