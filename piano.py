@@ -29,6 +29,7 @@ songs = {
 
 
 def leds_off():
+    """ Turn off all LEDs on the Piano Hat """
     for i in range(16):
         pianohat.set_led(i, False)
 
@@ -70,10 +71,16 @@ def volume_down(i, pressed):
 
 
 def set_volume(v):
+    """ Set volume. Pygame expects a float between 0 and 1.  """
     pygame.mixer.music.set_volume(v)
 
 
 def play_song(i, pressed):
+    """
+    Play a song, unless the song assigned to this key is already playing, in
+    which case we stop the song. If a different song is playing, Pygame will
+    automatically stop it and play this one.
+    """
     global playing, current_index, paused
 
     if not pressed:
@@ -117,6 +124,7 @@ pianohat.on_note(play_song)
 
 
 def shutdown():
+    """ Things we should do to gracefully shutt this program down. """
     leds_off()
     sys.exit(0)
 
@@ -126,7 +134,8 @@ def handle_sigterm(signal, frame):
 
 
 def main_loop():
-    while 1:
+    """ Block to keep this program running. """
+    while True:
         time.sleep(0.1)
 
 
