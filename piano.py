@@ -31,7 +31,7 @@ songs = {
 
 def leds_off() -> None:
     """ Turn off all LEDs on the Piano Hat """
-    for i in range(16):
+    for i in range(15):
         pianohat.set_led(i, False)
 
 
