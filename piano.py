@@ -14,7 +14,8 @@ with contextlib.redirect_stdout(None):
 playing = False
 paused = False
 volume = 0.5
-current_index = -1
+current_led_index = -1
+current_song_index = -1
 songs = {
     0: 'chromeo_tiny_desk_concert.ogg',
     2: 'plantasia.ogg',
@@ -81,14 +82,14 @@ def play_song(i: int, pressed: bool) -> None:
     which case we stop the song. If a different song is playing, Pygame will
     automatically stop it and play this one.
     """
-    global playing, current_index, paused
+    global playing, current_song_index, paused
 
     if not pressed:
         return
 
     paused = False
 
-    if playing and current_index is i:
+    if playing and current_song_index is i:
         # This track is already playing, so let's stop it
         pygame.mixer.music.stop()
         playing = False
@@ -108,8 +109,23 @@ def play_song(i: int, pressed: bool) -> None:
     pygame.mixer.music.play()
     pianohat.set_led(i, True)
     playing = True
-    current_index = i
+    current_song_index = i
     print('Playing', song)
+
+
+def step_led_sequence() -> None:
+    """
+    Play one step of the LED flashing sequence while the music is stopped.
+    Call this function repeatedly to play and loop the sequence.
+    """
+    global current_led_index
+
+    if playing:
+        return
+
+    current_led_index += 1
+    current_led_index = 0 if current_led_index > 12 else current_led_index
+    pianohat.set_led(current_led_index)
 
 
 pygame.init()
@@ -138,7 +154,8 @@ def handle_sigterm(signal, frame) -> None:
 def main_loop() -> None:
     """ Block to keep this program running. """
     while True:
-        time.sleep(0.1)
+        step_led_sequence()
+        time.sleep(1)
 
 
 # Listen for signal
