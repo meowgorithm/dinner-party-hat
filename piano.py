@@ -142,7 +142,7 @@ pianohat.on_note(play_song)
 
 
 def shutdown() -> None:
-    """ Things we should do to gracefully shutt this program down. """
+    """ Things we need to do to gracefully shut this program down. """
     leds_off()
     sys.exit(0)
 
@@ -155,7 +155,7 @@ def main_loop() -> None:
     """ Block to keep this program running. """
     while True:
         step_led_sequence()
-        time.sleep(1)
+        time.sleep(0.15)
 
 
 # Listen for signal
