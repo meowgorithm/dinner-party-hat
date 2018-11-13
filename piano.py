@@ -125,7 +125,8 @@ def step_led_sequence() -> None:
 
     current_led_index += 1
     current_led_index = 0 if current_led_index > 12 else current_led_index
-    pianohat.set_led(current_led_index)
+    leds_off()
+    pianohat.set_led(current_led_index, True)
 
 
 pygame.init()
