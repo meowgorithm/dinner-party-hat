@@ -130,7 +130,7 @@ def update_leds() -> None:
     leds_off()
 
     if playing:
-        pianohat.set_led(current_led_index, True)
+        pianohat.set_led(current_song_index, True)
     elif paused:
         pianohat.set_led(15, paused)
     else:
