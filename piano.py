@@ -14,7 +14,8 @@ with contextlib.redirect_stdout(None):
 playing = False
 paused = False
 volume = 0.5
-current_index = -1
+current_led_index = -1
+current_song_index = -1
 songs = {
     0: 'chromeo_tiny_desk_concert.ogg',
     2: 'plantasia.ogg',
@@ -26,12 +27,6 @@ songs = {
     11: 'teal.ogg',
     12: 'tower_of_heaven.ogg',
 }
-
-
-def leds_off() -> None:
-    """ Turn off all LEDs on the Piano Hat """
-    for i in range(16):
-        pianohat.set_led(i, False)
 
 
 def pause_music(i: int, pressed: bool) -> None:
@@ -71,7 +66,9 @@ def volume_down(i: int, pressed: bool) -> None:
 
 
 def set_volume(v: float) -> None:
-    """ Set volume. Pygame expects a float between 0 and 1.  """
+    """
+    Set volume. Pygame expects a float between 0 and 1.
+    """
     pygame.mixer.music.set_volume(v)
 
 
@@ -81,18 +78,17 @@ def play_song(i: int, pressed: bool) -> None:
     which case we stop the song. If a different song is playing, Pygame will
     automatically stop it and play this one.
     """
-    global playing, current_index, paused
+    global playing, current_song_index, paused
 
     if not pressed:
         return
 
     paused = False
 
-    if playing and current_index is i:
+    if playing and current_song_index is i:
         # This track is already playing, so let's stop it
         pygame.mixer.music.stop()
         playing = False
-        leds_off()
         print("Music stopped.")
         return
 
@@ -103,13 +99,51 @@ def play_song(i: int, pressed: bool) -> None:
         return
 
     # Play the song assigned to this key
-    leds_off()
     pygame.mixer.music.load(song)
     pygame.mixer.music.play()
-    pianohat.set_led(i, True)
     playing = True
-    current_index = i
+    current_song_index = i
     print('Playing', song)
+    update_leds()
+
+
+def step_led_sequence() -> None:
+    """
+    Play one step of the LED flashing sequence while the music is stopped.
+    Call this function repeatedly to play and loop the sequence.
+    """
+    global current_led_index
+
+    if playing:
+        return
+
+    current_led_index += 1
+    current_led_index = 0 if current_led_index > 12 else current_led_index
+    update_leds()
+
+
+def update_leds() -> None:
+    """
+    Consider the state of the program and set the LEDs on the Piano Hat
+    accordingly.
+    """
+    leds_off()
+
+    if playing:
+        pianohat.set_led(current_song_index, True)
+    elif paused:
+        pianohat.set_led(15, paused)
+    else:
+        # Play frame of "animated" light sequence
+        for i in range(13):
+            onOrOff = True if i is current_led_index else False
+            pianohat.set_led(i, onOrOff)
+
+
+def leds_off() -> None:
+    """ Turn off all LEDs on the Piano Hat """
+    for i in range(15):
+        pianohat.set_led(i, False)
 
 
 pygame.init()
@@ -126,7 +160,7 @@ pianohat.on_note(play_song)
 
 
 def shutdown() -> None:
-    """ Things we should do to gracefully shutt this program down. """
+    """ Things we need to do to gracefully shut this program down. """
     leds_off()
     sys.exit(0)
 
@@ -138,7 +172,8 @@ def handle_sigterm(signal, frame) -> None:
 def main_loop() -> None:
     """ Block to keep this program running. """
     while True:
-        time.sleep(0.1)
+        step_led_sequence()
+        time.sleep(0.15)
 
 
 # Listen for signal
