@@ -29,12 +29,6 @@ songs = {
 }
 
 
-def leds_off() -> None:
-    """ Turn off all LEDs on the Piano Hat """
-    for i in range(15):
-        pianohat.set_led(i, False)
-
-
 def pause_music(i: int, pressed: bool) -> None:
     global paused
 
@@ -72,7 +66,9 @@ def volume_down(i: int, pressed: bool) -> None:
 
 
 def set_volume(v: float) -> None:
-    """ Set volume. Pygame expects a float between 0 and 1.  """
+    """
+    Set volume. Pygame expects a float between 0 and 1.
+    """
     pygame.mixer.music.set_volume(v)
 
 
@@ -93,7 +89,6 @@ def play_song(i: int, pressed: bool) -> None:
         # This track is already playing, so let's stop it
         pygame.mixer.music.stop()
         playing = False
-        leds_off()
         print("Music stopped.")
         return
 
@@ -104,13 +99,12 @@ def play_song(i: int, pressed: bool) -> None:
         return
 
     # Play the song assigned to this key
-    leds_off()
     pygame.mixer.music.load(song)
     pygame.mixer.music.play()
-    pianohat.set_led(i, True)
     playing = True
     current_song_index = i
     print('Playing', song)
+    update_leds()
 
 
 def step_led_sequence() -> None:
@@ -125,11 +119,31 @@ def step_led_sequence() -> None:
 
     current_led_index += 1
     current_led_index = 0 if current_led_index > 12 else current_led_index
+    update_leds()
 
-    # Turn on the appropriate LED (and turn off the others)
-    for i in range(13):
-        onOrOff = True if i is current_led_index else False
-        pianohat.set_led(i, onOrOff)
+
+def update_leds() -> None:
+    """
+    Consider the state of the program and set the LEDs on the Piano Hat
+    accordingly.
+    """
+    leds_off()
+
+    if playing:
+        pianohat.set_led(current_led_index, True)
+    elif paused:
+        pianohat.set_led(15, paused)
+    else:
+        # Play frame of "animated" light sequence
+        for i in range(13):
+            onOrOff = True if i is current_led_index else False
+            pianohat.set_led(i, onOrOff)
+
+
+def leds_off() -> None:
+    """ Turn off all LEDs on the Piano Hat """
+    for i in range(15):
+        pianohat.set_led(i, False)
 
 
 pygame.init()
